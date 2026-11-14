@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Predictor</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #333333;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #2563eb;
+            text-align: center;
+        }
+	.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #2563eb;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #1d4ed8;
+}
+
+#result {
+    margin-top: 25px;
+    padding: 15px;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#result:empty {
+    display: none;
+}
+label {
+    display: inline-block;
+    width: 190px;
+}
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        margin: 10px auto;
+        padding: 20px;
+    }
+
+    label {
+        display: block;
+        width: 100%;
+        margin-bottom: 6px;
+    }
+
+    input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    button {
+        width: 100%;
+    }
+}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>House Price Predictor</h1>
+    <p>Welcome to my first AI-powered web application!</p>
+    <label for="income">Median Income:</label>
+    <input type="number" id="income" step="0.1" value="5.0">
+	<br><br>
+
+<label for="age">House Age:</label>
+<input type="number" id="age" value="20">
+
+<br><br>
+
+<label for="rooms">Average Rooms:</label>
+<input type="number" id="rooms" step="0.1" value="6.0">
+
+<br><br>
+
+<label for="bedrooms">Average Bedrooms:</label>
+<input type="number" id="bedrooms" step="0.1" value="1.2">
+
+<br><br>
+
+<label for="population">Population:</label>
+<input type="number" id="population" value="1200">
+
+<br><br>
+
+<label for="occupancy">Average Occupancy:</label>
+<input type="number" id="occupancy" step="0.1" value="3.0">
+
+<br><br>
+
+<label for="latitude">Latitude:</label>
+<input type="number" id="latitude" step="any" value="34.0">
+
+<br><br>
+
+<label for="longitude">Longitude:</label>
+<input type="number" id="longitude" step="any" value="-118.0">
+
+<br><br>
+
+<button type="button" onclick="predictPrice()">
+    Predict Price
+</button>
+
+<p id="result"></p>
+
+</div>
+
+<script>
+   function predictPrice() {
+    let houseData = {
+        MedInc: Number(document.getElementById("income").value),
+        HouseAge: Number(document.getElementById("age").value),
+        AveRooms: Number(document.getElementById("rooms").value),
+        AveBedrms: Number(document.getElementById("bedrooms").value),
+        Population: Number(document.getElementById("population").value),
+        AveOccup: Number(document.getElementById("occupancy").value),
+        Latitude: Number(document.getElementById("latitude").value),
+        Longitude: Number(document.getElementById("longitude").value)
+    };
+
+    fetch("https://house-price-prediction-api-u8of.onrender.com/predict", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(houseData)
+})
+.then(response => response.json())
+.then(data => {
+    let formattedPrice = Number(data.predicted_price).toLocaleString(
+        "en-US",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+
+    document.getElementById("result").innerText =
+        "Predicted House Price: $" + formattedPrice;
+})
+.catch(error => {
+    document.getElementById("result").innerText =
+        "Error: " + error.message;
+});
+}
+</script>
+
+</body>
+</html>
