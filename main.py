@@ -3,8 +3,17 @@ from pydantic import BaseModel
 import pandas as pd
 import joblib
 from huggingface_hub import hf_hub_download
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
+)
 
 model_path = hf_hub_download(
     repo_id="LesibaG/house-price-random-forest",
