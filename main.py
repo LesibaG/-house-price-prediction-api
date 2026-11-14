@@ -2,13 +2,15 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
 import joblib
-from pathlib import Path
+from huggingface_hub import hf_hub_download
 
-# Create our FastAPI application
 app = FastAPI()
 
-# Load the trained Random Forest model
-model_path = Path(__file__).resolve().parent / "house_price_model.pkl"
+model_path = hf_hub_download(
+    repo_id="LesibaG/house-price-random-forest",
+    filename="house_price_model.pkl"
+)
+
 model = joblib.load(model_path)
 
 # Define the house information required
